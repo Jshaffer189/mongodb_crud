@@ -8,6 +8,19 @@ const collection = 'todo';
 const app = express();
 app.use(bodyParser.json());
 
+// database connection
+db.connect((err) => {
+	if (err) {
+		console.log('unable to connect to database');
+		process.exit(1);
+	} else {
+		app.listen(3000, () => {
+			console.log('connected to database, app listening to port 3000');
+		});
+	}
+});
+
+// routes
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -21,16 +34,4 @@ app.get('/getTodos', (req, res) => {
 			res.json(documents);
 		}
 	});
-});
-
-// database connection
-db.connect((err) => {
-	if (err) {
-		console.log('unable to connect to database');
-		process.exit(1);
-	} else {
-		app.listen(3000, () => {
-			console.log('connected to database, app listening to port 3000');
-		});
-	}
 });
