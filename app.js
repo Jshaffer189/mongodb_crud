@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// read
 app.get('/getTodos', (req, res) => {
 	db.getDB().collection(collection).find({}).toArray((err, documents) => {
 		if (err) {
@@ -24,6 +25,7 @@ app.get('/getTodos', (req, res) => {
 	});
 });
 
+//
 app.put('/:id', (req, res) => {
 	const todoID = req.params.id;
 	const userInput = req.body;
@@ -45,7 +47,7 @@ app.put('/:id', (req, res) => {
 		);
 });
 
-// database insert todo
+// insert
 app.post('/', (req, res) => {
 	const userInput = req.body;
 	// database connection
@@ -58,7 +60,20 @@ app.post('/', (req, res) => {
 	});
 });
 
-app.delete('/:id', (req, res) => {});
+// Delte
+app.delete('/:id', (req, res) => {
+	const todoID = req.params.id;
+
+	// callback func err/result
+	db.getDB().collection(collection).findOneAndDelete({ _id: db.getPrimaryKey(todoID) }, (err, result) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(result);
+			res.json(result);
+		}
+	});
+});
 
 // database connection
 db.connect((err) => {
@@ -71,5 +86,3 @@ db.connect((err) => {
 		});
 	}
 });
-
-//  25:35
