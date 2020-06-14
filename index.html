@@ -28,13 +28,11 @@
         <div class="row">
             <div class="col-lg-2"></div>
             <div class="col-lg-8">
-                <ul class="list-group" id="display">
-                    <li class="list-group-item">Cras justo odio</li>
-                  </ul>
+                <ul class="list-group" id="display"></ul>
             </div>
             <div class="col-lg-2"></div>
         </div>
-    </div>>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -47,10 +45,13 @@
             const form = $("#form");
             const todoUserInput = $("#todoUserInput")
 
+
+            // reset field 
             const resetTodosInput = () => {
                 todoUserInput.val('')            
             }
 
+            // build template todo
             const buildIDS = (todo) => {
                 return {
                     editID : "edit_" + todo._id,
@@ -60,11 +61,30 @@
                 }
             }
 
-            // search by ids passed in, than display content
+            // build template list item ui
             const buildTemplate = (todo, ids) => {
                 return `
-                <li class="list-group-item" id="${ids.listItemID}"></li>
+                <li class="list-group-item" id="${ids.listItemID}">
+                    <div class="row">
+                        <div class="col-md-4" id="${ids.todoID}">${todo.todo}</div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4 test-right">
+                            <button type="button" class="btn btn-secondary" id="${ids.editID}">Edit</button>
+                            <button type="button" class="btn btn-danger" id="${ids.deleteID}">Delete</button>
+                        </div>
+                    </div>
+                </li>
                 `
+            }
+
+            // assembler function  
+            const displayTodos = (data) => {
+                data.forEach((todo)  => {
+                    let ids = buildIDS(todo);
+                    display.append(buildTemplate(todo, ids))
+                    editTodo(todo, ids.todoID, ids.editID);
+                    deleteTodo(todo,ids.listItemID,ids.deleteID);
+                });
             }
         })
     </script>
