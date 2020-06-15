@@ -47,7 +47,7 @@ app.put('/:id', (req, res) => {
 		);
 });
 
-// insert
+// Create
 app.post('/', (req, res) => {
 	const userInput = req.body;
 	// database connection
