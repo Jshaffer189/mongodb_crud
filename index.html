@@ -62,6 +62,44 @@
                 todoUserInput.val('')            
             }
 
+            const editTodo = (todo, todoID, editID) => {
+                let editBtn = $(`#${editID}`);
+                editBtn.click(() => {
+                    console.log("Registered")
+                    fetch(`/${todo._id}`, {
+                        method: "put",
+                        headers: {
+                            "Content-Type" : "application/json",
+                        },
+                        body: JSON.stringify({todo: todoUserInput.val()})
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        if(data.ok ==1){
+                            let todoIndex = $(`#${todoID}`)
+                            todoIndex.html(data.value.todo)
+                            resetTodosInput();
+                        }
+                    })
+                })
+            }
+
+            // todo item, listID in our ul, delete button id
+            const deleteTodo = (todo, listItemID, deleteID) => {
+                let deleteBtn = $(`#${deleteID}`);
+                deleteBtn.click(() => {
+                    fetch(`/${todo._id}`, {
+                        method: "delete"
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        if(data.ok == 1) {
+                            $(`#${listItemID}`).remove()
+                        }
+                    })
+                })
+            }
+
             // build template todo
             const buildIDS = (todo) => {
                 return {
@@ -93,8 +131,8 @@
                 data.forEach((todo)  => {
                     let ids = buildIDS(todo);
                     display.append(buildTemplate(todo, ids))
-                    // editTodo(todo, ids.todoID, ids.editID);
-                    // deleteTodo(todo,ids.listItemID,ids.deleteID);
+                    editTodo(todo, ids.todoID, ids.editID);
+                    deleteTodo(todo,ids.listItemID,ids.deleteID);
                 });
             }
 
@@ -117,13 +155,14 @@
                     if(data.result.ok == 1 && data.result.n == 1) {
                         let ids = buildIDS(data.document)
                         display.append(buildTemplate(data.document, ids))
-                        // editTodo(data.document, ids.todoID,ids.editID)
-                        // deleteTodo(data.document, ids.listItemID, ids.deleteID)
+                        editTodo(data.document, ids.todoID,ids.editID)
+                        deleteTodo(data.document, ids.listItemID, ids.deleteID)
                     }
                     resetTodosInput();
                 })
             })
         })
+
     </script>
   </body>
 </html>

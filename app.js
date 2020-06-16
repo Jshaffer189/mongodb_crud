@@ -25,7 +25,7 @@ app.get('/getTodos', (req, res) => {
 	});
 });
 
-//
+// update
 app.put('/:id', (req, res) => {
 	const todoID = req.params.id;
 	const userInput = req.body;
