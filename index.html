@@ -32,6 +32,14 @@
             </div>
             <div class="col-lg-2"></div>
         </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div class="alert" id="message" role="alert"></div>
+            </div>
+            <div class="col-lg-2"></div>
+        </div>
     </div>
 
     <!-- Optional JavaScript -->
@@ -43,7 +51,25 @@
         $(document).ready(() => {
             const display = $("#display");
             const form = $("#form");
-            const todoUserInput = $("#todoUserInput")
+            const todoUserInput = $("#todoUserInput");
+            const message = $("#message");
+            message.hide();
+
+            const displayMessage = (flag, msg) => {
+                // sucessful post
+                if (flag) {
+                    message.removeClass('alert-danger')
+                    message.addClass('alert-success')
+                    message.html(msg)
+                    message.show()
+                }
+                else{
+                    message.removeClass('alert-sucess')
+                    message.addClass('alert-danger')
+                    message.html(msg)
+                    message.show()
+                }
+            }
 
             const getTodos = () =>{ 
                 fetch('/getTodos', {method: "get"}).then((response) => {
@@ -152,11 +178,18 @@
                     return response.json()
                 }).then((data) => {
                     // if promise successful 
-                    if(data.result.ok == 1 && data.result.n == 1) {
-                        let ids = buildIDS(data.document)
-                        display.append(buildTemplate(data.document, ids))
-                        editTodo(data.document, ids.todoID,ids.editID)
-                        deleteTodo(data.document, ids.listItemID, ids.deleteID)
+                    if (!data.error) {
+                        if(data.result.ok == 1 && data.result.n == 1) {
+                            let ids = buildIDS(data.document)
+                            display.append(buildTemplate(data.document, ids))
+                            editTodo(data.document, ids.todoID,ids.editID)
+                            deleteTodo(data.document, ids.listItemID, ids.deleteID)
+                            displayMessage(true, data.msg);
+                        }
+                        else {
+                            displayMessage(false,data.error.message)
+                        }
+
                     }
                     resetTodosInput();
                 })
