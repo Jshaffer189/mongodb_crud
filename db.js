@@ -20,7 +20,7 @@ const connect = (cb) => {
 	// if there is a database connection use callback
 	if (state.db) {
 		db();
-		// if there isnt a database connection use mongb client to connect to database
+		// if there isnt a database connection use mongo client to connect to database
 	} else {
 		MongoClient.connect(url, mongoOptions, (err, client) => {
 			if (err) {

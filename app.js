@@ -4,6 +4,7 @@ const path = require('path');
 const Joi = require('joi');
 
 const db = require('./db');
+// name of table/collection
 const collection = 'todo';
 
 const app = express();
